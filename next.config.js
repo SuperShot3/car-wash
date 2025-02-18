@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true, // Необходимо для экспорта изображений
   },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '', // Для GitHub Pages
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  basePath: process.env.NODE_ENV === 'production' ? '/car-spa' : '', // Используем имя вашего репозитория
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/car-spa' : '',
 }
 
 module.exports = nextConfig 

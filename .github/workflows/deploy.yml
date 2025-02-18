@@ -28,10 +28,11 @@ jobs:
           NEXT_PUBLIC_EMAIL_SERVICE_KEY: ${{ secrets.NEXT_PUBLIC_EMAIL_SERVICE_KEY }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          NEXT_PUBLIC_BASE_PATH: /your-repo-name  # Замените на имя вашего репозитория
 
       - name: Add .nojekyll file
-        run: touch ./out/.nojekyll
+        run: |
+          touch ./out/.nojekyll
+          cp -r ./public/* ./out/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
