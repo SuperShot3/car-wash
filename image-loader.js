@@ -1,3 +1,4 @@
 export default function imageLoader({ src }) {
-  return `/car-wash${src}`
+  const basePath = process.env.NODE_ENV === 'production' ? '/car-wash' : ''
+  return `${basePath}${src}`
 } 
