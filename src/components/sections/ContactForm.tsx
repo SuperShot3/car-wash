@@ -36,13 +36,17 @@ const timeSlots = [
   '14:00', '15:00', '16:00', '17:00'
 ];
 
-export default function ContactForm() {
+interface ContactFormProps {
+  preselectedService?: ServiceType;
+}
+
+const ContactForm: React.FC<ContactFormProps> = ({ preselectedService }) => {
   const searchParams = useSearchParams();
   const serviceFromUrl = searchParams.get('service') as ServiceType | null;
 
   const [formData, setFormData] = useState<FormData>({
     ...initialFormData,
-    service: serviceFromUrl || initialFormData.service
+    service: preselectedService || serviceFromUrl || initialFormData.service
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
@@ -244,4 +248,6 @@ export default function ContactForm() {
       </div>
     </section>
   );
-} 
+};
+
+export default ContactForm; 

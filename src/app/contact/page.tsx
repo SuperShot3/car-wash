@@ -1,5 +1,5 @@
-import { ContactForm } from '@/components/ContactForm';
-import { ContactInfo } from '@/components/ContactInfo';
+import ContactForm from '@/components/sections/ContactForm';
+import ContactInfo from '@/components/sections/ContactInfo';
 import { ServiceType } from '@/types';
 
 interface ContactPageProps {
