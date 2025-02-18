@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ServiceType, VehicleType } from '@/types/services';
+import { ServiceType, VehicleType } from '@/types';
 import { useSearchParams } from 'next/navigation';
 
 type FormData = {
