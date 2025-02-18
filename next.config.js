@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true, // Необходимо для экспорта изображений
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/car-spa' : '', // Используем имя вашего репозитория
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/car-spa' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/car-wash' : '', // Обновлено на car-wash
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/car-wash' : '',
 }
 
 module.exports = nextConfig 
