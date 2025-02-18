@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Статическая генерация
+  output: 'export',  // Важно для статической генерации
   images: {
-    unoptimized: true, // Для GitHub Pages
+    unoptimized: true
   },
-  basePath: '/car-spa', // Это будет часть URL вашего сайта
+  basePath: '/car-wash', // Имя вашего репозитория
 }
 
 module.exports = nextConfig 
