@@ -9,6 +9,7 @@ const nextConfig = {
   basePath: process.env.NODE_ENV === 'production' ? '/car-wash' : '', // Обновлено на car-wash
   assetPrefix: process.env.NODE_ENV === 'production' ? '/car-wash' : '',
   trailingSlash: true, // Добавляем слэш в конце URL
+  distDir: 'dist', // Добавляем эту строку
 }
 
 module.exports = nextConfig 
