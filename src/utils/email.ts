@@ -8,21 +8,32 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-type EmailParams = {
-  to: string;
-  subject: string;
-  text: string;
-};
+export const sendEmail = async (data: {
+  name: string;
+  email: string;
+  service: string;
+  date: string;
+  time: string;
+}) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
+    subject: `New Booking Request from ${data.name}`,
+    text: `
+      New booking request:
+      Name: ${data.name}
+      Email: ${data.email}
+      Service: ${data.service}
+      Date: ${data.date}
+      Time: ${data.time}
+    `,
+  };
 
-export async function sendEmail({ to, subject, text }: EmailParams) {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to,
-      subject,
-      text,
-    });
+    await transporter.sendMail(mailOptions);
+    return { success: true };
   } catch (error) {
     console.error('Error sending email:', error);
+    return { success: false, error };
   }
-} 
+}; 
