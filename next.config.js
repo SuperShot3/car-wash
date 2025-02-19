@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Важно для статической генерации
+  output: 'export',  // Возвращаем обратно 'export' вместо 'getStaticPaths'
   images: {
     unoptimized: true, // Необходимо для экспорта изображений
   },
