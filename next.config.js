@@ -9,6 +9,8 @@ const nextConfig = {
   trailingSlash: true, // Добавляем слэш в конце URL
   env: {
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    EMAIL_SERVICE_KEY: process.env.EMAIL_SERVICE_KEY,
   }
 }
 
