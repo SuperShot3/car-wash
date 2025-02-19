@@ -10,17 +10,17 @@ const services: { title: ServiceType; description: string; image: string }[] = [
   {
     title: 'Basic Wash',
     description: 'Complete exterior wash and basic interior cleaning',
-    image: '/images/services/detailing.png',
+    image: '/car-wash/images/services/basic-wash.jpg',
   },
   {
     title: 'Deluxe Wash',
     description: 'Premium wash with wax protection and interior detailing',
-    image: '/images/services/paint.png',
+    image: '/car-wash/images/services/deluxe-wash.jpg',
   },
   {
     title: 'Premium Detail',
     description: 'Full detail service with ceramic coating and paint correction',
-    image: '/images/services/interior.png',
+    image: '/car-wash/images/services/premium-detail.jpg',
   },
 ];
 

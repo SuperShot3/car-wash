@@ -6,13 +6,15 @@ import { CheckCircleIcon, SparklesIcon, ClockIcon } from '@heroicons/react/24/ou
 const features = [
   {
     icon: CheckCircleIcon,
-    title: 'Premium Quality',
+    title: 'Premium Service',
     description: 'We use only the finest products and techniques',
+    image: "/car-wash/images/features/premium.jpg",
   },
   {
     icon: SparklesIcon,
-    title: 'Expert Care',
+    title: 'Expert Team',
     description: 'Our team of certified professionals ensures excellence',
+    image: "/car-wash/images/features/team.jpg",
   },
   {
     icon: ClockIcon,

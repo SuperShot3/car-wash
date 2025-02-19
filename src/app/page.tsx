@@ -3,6 +3,7 @@ import Services from '@/components/sections/Services';
 import Features from '@/components/sections/Features';
 import PricingTable from '@/components/sections/PricingTable';
 import MapSection from '@/components/sections/MapSection';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -12,6 +13,10 @@ export default function Home() {
       <Features />
       <PricingTable />
       <MapSection />
+      <Image
+        src="/car-wash/images/home/welcome.jpg"
+        alt="Welcome"
+      />
     </>
   );
 } 
