@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start">
             <Link href="/" className="relative w-40 h-12 mb-4">
               <Image
-                src="/car-wash/images/logo/logo-white.png"
+                src="/images/logo/logo-white.png"
                 alt="Car Spa Logo"
                 fill
                 className="object-contain"

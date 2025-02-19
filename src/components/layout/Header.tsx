@@ -52,7 +52,7 @@ export default function Header() {
           >
             <div className="relative w-full h-full">
               <Image
-                src="/car-wash/images/logo/logo.png"
+                src="/images/logo/logo.png"
                 alt="Car Spa Logo"
                 fill
                 className="object-contain object-left"

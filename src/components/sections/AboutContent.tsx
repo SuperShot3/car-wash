@@ -26,7 +26,7 @@ export default function AboutContent() {
           >
             <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="/car-wash/images/about/facility.png"
+                src="/images/about/facility.png"
                 alt="About Our Car Wash"
                 width={800}
                 height={700}

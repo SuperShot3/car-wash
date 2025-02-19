@@ -26,7 +26,7 @@ const serviceDetails: Record<ServiceType, ServiceDetail> = {
       'Basic interior vacuum',
       'Window cleaning',
     ],
-    image: '/car-wash/images/services/detailing.png',
+    image: '/images/services/paint.png',
     price: {
       basic: 30,
       full: 45,
@@ -42,7 +42,7 @@ const serviceDetails: Record<ServiceType, ServiceDetail> = {
       'Interior wipe down',
       'Air freshener',
     ],
-    image: '/car-wash/images/services/paint.png',
+    image: '/images/services/detailing.png',
     price: {
       basic: 50,
       full: 75,
@@ -59,7 +59,7 @@ const serviceDetails: Record<ServiceType, ServiceDetail> = {
       'Leather conditioning',
       'Engine bay cleaning',
     ],
-    image: '/car-wash/images/services/interior.png',
+    image: '/images/services/interior.png',
     price: {
       basic: 150,
       full: 220,

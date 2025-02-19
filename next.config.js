@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['vercel.com'], // Добавьте домены, если используете внешние изображения
-    unoptimized: false, // На Vercel можно использовать оптимизацию изображений
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   env: {
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,

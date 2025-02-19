@@ -6,7 +6,7 @@ import { XMarkIcon, PaperAirplaneIcon, ChevronUpIcon, ChevronDownIcon } from '@h
 import { useRouter } from 'next/navigation';
 
 type Message = {
-  role: 'user' | 'bot';
+  role: 'user' | 'assistant';
   content: string;
 };
 
@@ -68,7 +68,7 @@ export default function ChatBot() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', content: 'Hello! Welcome to Car Spa. How can I help you today?' }
+    { role: 'assistant', content: 'Hello! Welcome to Car Spa. How can I help you today?' }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +87,11 @@ export default function ChatBot() {
   // Определяем текущий этап разговора на основе последних сообщений
   useEffect(() => {
     if (messages.length > 1) {
-      const lastBotMessage = messages.filter(m => m.role === 'bot').pop()?.content.toLowerCase() || '';
+      const lastBotMessage = messages
+        .filter(m => m.role === 'assistant')
+        .pop()
+        ?.content
+        ?.toLowerCase() || '';
       
       if (lastBotMessage.includes('service') || lastBotMessage.includes('offer')) {
         setCurrentStage('services');
@@ -145,24 +149,36 @@ export default function ChatBot() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: userMessage,
-          history: messages.map(m => ({
-            role: m.role,
-            content: m.content
-          }))
+          message: userMessage
         })
       });
 
       const data = await response.json();
 
       if (data.redirect) {
-        router.push(data.redirect);
+        // Добавляем сообщение бота перед перенаправлением
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: data.response 
+        }]);
+        
+        // Задержка перед перенаправлением
+        setTimeout(() => {
+          // Перенаправляем и скроллим к секции с ценами
+          router.push(data.redirect).then(() => {
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+              pricingSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+          setIsOpen(false);
+        }, 2000);
+      } else {
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: data.response 
+        }]);
       }
-
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: data.response 
-      }]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
@@ -190,19 +206,33 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* Chat Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className={`fixed ${isOpen ? 'hidden' : 'flex'} bottom-4 right-4 items-center gap-2 bg-gradient-to-r from-gold to-amber-500 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}
-      >
-        <span className="text-sm font-medium">Chat with Us</span>
-        <PaperAirplaneIcon className="h-5 w-5" />
-      </button>
-
-      {/* Chat Window */}
       <AnimatePresence>
+        {/* Кнопка чата */}
+        <motion.div
+          key="chat-button"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className="fixed bottom-4 right-4 z-50 md:block"
+        >
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-gradient-to-r from-gold to-amber-500 hover:from-amber-500 hover:to-gold text-white p-4 rounded-full shadow-lg transition-all duration-300"
+          >
+            {isOpen ? (
+              <XMarkIcon className="w-6 h-6" />
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+            )}
+          </button>
+        </motion.div>
+
+        {/* Окно чата */}
         {isOpen && (
           <motion.div
+            key="chat-window"
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
