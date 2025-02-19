@@ -3,7 +3,6 @@ import Services from '@/components/sections/Services';
 import Features from '@/components/sections/Features';
 import PricingTable from '@/components/sections/PricingTable';
 import MapSection from '@/components/sections/MapSection';
-import Image from 'next/image';
 
 export default function Home() {
   return (
