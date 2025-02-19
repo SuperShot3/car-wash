@@ -17,20 +17,16 @@ interface FormData {
   message: string;
 }
 
-interface ContactFormProps {
-  preselectedService?: ServiceType;
-}
-
-const ContactForm: FC<ContactFormProps> = ({ preselectedService }) => {
+const ContactForm: FC = () => {
   const searchParams = useSearchParams();
-  const serviceFromUrl = searchParams.get('service') as ServiceType | null;
+  const serviceFromUrl = searchParams?.get('service') as ServiceType | null;
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
-    service: preselectedService || serviceFromUrl || 'Basic Wash',
-    vehicleType: 'Small Car',
+    service: 'Basic Wash' as ServiceType,
+    vehicleType: 'Small Car' as VehicleType,
     isExteriorOnly: true,
     preferredDate: '',
     preferredTime: '',
@@ -39,7 +35,6 @@ const ContactForm: FC<ContactFormProps> = ({ preselectedService }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
 
-  // Обновляем сервис при изменении URL параметров
   useEffect(() => {
     if (serviceFromUrl) {
       setFormData(prev => ({

@@ -2,27 +2,13 @@ import ContactForm from '@/components/ContactForm';
 import ContactInfo from '@/components/sections/ContactInfo';
 import { ServiceType } from '@/types';
 
-// Добавляем generateStaticParams для статической генерации
-export function generateStaticParams() {
-  return [
-    { service: 'Basic Wash' },
-    { service: 'Deluxe Wash' },
-    { service: 'Premium Detail' },
-    { service: undefined }, // Для случая без параметра
-  ];
-}
+// Добавляем маркер для статической страницы
+export const dynamic = 'force-static';
 
-// Изменяем тип props
-interface ContactPageProps {
-  searchParams?: {
-    service?: ServiceType;
-  };
-}
-
-export default function ContactPage({ searchParams = {} }: ContactPageProps) {
+export default function ContactPage() {
   return (
     <div className="pt-20">
-      <ContactForm preselectedService={searchParams.service} />
+      <ContactForm />
       <ContactInfo />
     </div>
   );
