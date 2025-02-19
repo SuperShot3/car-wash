@@ -31,10 +31,6 @@ export default function Services() {
     router.push(`/car-wash/contact?service=${encodeURIComponent(service)}`);
   };
 
-  const handleLearnMore = (service: string) => {
-    router.push(`/car-wash/services/${service}`);
-  };
-
   return (
     <section className="py-20 bg-white">
       <div className="container-custom">
@@ -70,7 +66,7 @@ export default function Services() {
                 <p className="text-zinc-600 mb-4">{service.description}</p>
                 <div className="flex space-x-4">
                   <Link 
-                    href={`/car-wash/services/${service.title.toLowerCase().replace(' ', '-')}`}
+                    href={`/car-wash/service-details/${service.title.toLowerCase().replace(' ', '-')}`}
                     className="text-gold hover:text-amber-500 transition-colors flex items-center"
                   >
                     Learn More

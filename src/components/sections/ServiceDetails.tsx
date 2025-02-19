@@ -67,9 +67,17 @@ const serviceDetails: Record<ServiceType, ServiceDetail> = {
   },
 };
 
-export default function ServiceDetails({ service }: { service: ServiceType }) {
+interface ServiceDetailsProps {
+  service: string;
+}
+
+export default function ServiceDetails({ service }: ServiceDetailsProps) {
+  const formattedService = service.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+
   const router = useRouter();
-  const details = serviceDetails[service];
+  const details = serviceDetails[formattedService as ServiceType];
 
   if (!details) {
     return (
@@ -89,7 +97,7 @@ export default function ServiceDetails({ service }: { service: ServiceType }) {
   }
 
   const handleBooking = () => {
-    router.push(`/contact?service=${encodeURIComponent(service)}`);
+    router.push(`/contact?service=${encodeURIComponent(formattedService)}`);
   };
 
   return (
@@ -118,7 +126,7 @@ export default function ServiceDetails({ service }: { service: ServiceType }) {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-4xl font-playfair"
               >
-                {details.title}
+                {formattedService}
               </motion.h1>
               
               <motion.p
