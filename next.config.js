@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true, // Необходимо для экспорта изображений
   },
-  basePath: '/car-wash',  // Убираем условие
+  basePath: '/car-wash',
   assetPrefix: '/car-wash', // Убираем условие
   trailingSlash: true, // Добавляем слэш в конце URL
   env: {
