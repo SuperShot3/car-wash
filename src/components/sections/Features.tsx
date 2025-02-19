@@ -2,20 +2,17 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircleIcon, SparklesIcon, ClockIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 
 const features = [
   {
     icon: CheckCircleIcon,
     title: 'Premium Service',
     description: 'We use only the finest products and techniques',
-    image: "/car-wash/images/features/premium.png",
   },
   {
     icon: SparklesIcon,
     title: 'Expert Team',
     description: 'Our team of certified professionals ensures excellence',
-    image: "/car-wash/images/features/team.jpg",
   },
   {
     icon: ClockIcon,
@@ -46,12 +43,7 @@ export default function Features() {
               transition={{ delay: index * 0.2 }}
               className="text-center"
             >
-              <Image
-                src="/car-wash/images/features/feature-1.png"
-                alt="Feature"
-                width={400}
-                height={300}
-              />
+              <feature.icon className="h-12 w-12 text-gold mx-auto mb-4" />
               <h3 className="text-xl font-playfair mb-2">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>
             </motion.div>
