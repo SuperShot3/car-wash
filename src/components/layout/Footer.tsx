@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <Image
-              src="/images/logo/logo-white.png"
+              src="/car-wash/images/logo/logo-white.png"
               alt="Car Spa Logo"
               width={100}
               height={35}

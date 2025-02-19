@@ -22,7 +22,7 @@ export default function Header() {
           <div className="flex-shrink-0 flex items-center -ml-8">
             <Link href="/">
               <Image
-                src="/images/logo/logo.png"
+                src="/car-wash/images/logo/logo.png"
                 alt="Car Spa Logo"
                 width={120}
                 height={40}
