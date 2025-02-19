@@ -6,8 +6,21 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function POST(req: Request) {
   try {
+    // Проверяем API ключ
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY is not configured');
+    }
+
     const { message } = await req.json();
     
+    // Валидация входных данных
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid message format' },
+        { status: 400 }
+      );
+    }
+
     // Проверяем наличие вопроса о ценах
     const priceKeywords = ['price', 'cost', 'how much', 'pricing', 'rates', 'fee'];
     const isPriceQuestion = priceKeywords.some(keyword => 
@@ -36,12 +49,33 @@ export async function POST(req: Request) {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
 
+    if (!response) {
+      throw new Error('Empty response from Gemini');
+    }
+
     return NextResponse.json({ response });
     
   } catch (error) {
     console.error('Chat API error:', error);
+    
+    // Более информативные сообщения об ошибках
+    if (error instanceof Error) {
+      if (error.message.includes('API key')) {
+        return NextResponse.json(
+          { error: 'Service configuration error' },
+          { status: 500 }
+        );
+      }
+      if (error.message.includes('rate limit')) {
+        return NextResponse.json(
+          { error: 'Service is temporarily unavailable. Please try again later.' },
+          { status: 429 }
+        );
+      }
+    }
+
     return NextResponse.json(
-      { error: 'Failed to process request' },
+      { error: 'An unexpected error occurred' },
       { status: 500 }
     );
   }

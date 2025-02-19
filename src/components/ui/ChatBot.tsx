@@ -75,6 +75,7 @@ export default function ChatBot() {
   const [currentStage, setCurrentStage] = useState<SuggestionCategory['stage']>('initial');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -163,15 +164,23 @@ export default function ChatBot() {
         }]);
         
         // Задержка перед перенаправлением
-        setTimeout(() => {
-          // Перенаправляем и скроллим к секции с ценами
-          router.push(data.redirect).then(() => {
-            const pricingSection = document.getElementById('pricing');
-            if (pricingSection) {
-              pricingSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          });
-          setIsOpen(false);
+        setTimeout(async () => {
+          try {
+            // Сначала делаем перенаправление
+            await router.push(data.redirect);
+            
+            // После перенаправления ждем немного для загрузки страницы
+            setTimeout(() => {
+              const pricingSection = document.getElementById('pricing');
+              if (pricingSection) {
+                pricingSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 100);
+            
+            setIsOpen(false);
+          } catch (error) {
+            console.error('Navigation error:', error);
+          }
         }, 2000);
       } else {
         setMessages(prev => [...prev, { 
@@ -293,10 +302,13 @@ export default function ChatBot() {
                   </motion.div>
                 ))}
                 {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-white border border-gray-200 p-3 rounded-2xl shadow-md">
-                      <span className="animate-pulse">Typing...</span>
-                    </div>
+                  <div className="flex justify-center p-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gold"></div>
+                  </div>
+                )}
+                {error && (
+                  <div className="text-red-500 text-sm text-center p-2">
+                    {error}
                   </div>
                 )}
                 <div ref={messagesEndRef} />
