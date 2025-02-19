@@ -10,8 +10,8 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/car-wash/images/hero-bg.jpg"
-          alt="Car Wash Hero"
+          src="/car-wash/images/hero/background.jpg"
+          alt="Hero Background"
           fill
           priority
           className="object-cover"
