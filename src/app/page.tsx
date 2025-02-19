@@ -13,10 +13,6 @@ export default function Home() {
       <Features />
       <PricingTable />
       <MapSection />
-      <Image
-        src="/car-wash/images/home/welcome.jpg"
-        alt="Welcome"
-      />
     </>
   );
 } 
