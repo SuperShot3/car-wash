@@ -28,7 +28,7 @@ export default function Services() {
   const router = useRouter();
 
   const handleBooking = (service: ServiceType) => {
-    router.push(`/car-wash/contact?service=${encodeURIComponent(service)}`);
+    router.push(`/contact?service=${encodeURIComponent(service)}`);
   };
 
   return (
