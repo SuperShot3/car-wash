@@ -1,17 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "next build",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
   "env": {
     "GEMINI_API_KEY": "@gemini-api-key",
     "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY": "@google-maps-api-key",
     "EMAIL_SERVICE_KEY": "@email-service-key"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
   }
 } 
