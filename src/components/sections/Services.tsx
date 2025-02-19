@@ -66,7 +66,7 @@ export default function Services() {
                 <p className="text-zinc-600 mb-4">{service.description}</p>
                 <div className="flex space-x-4">
                   <Link 
-                    href={`/service-details/${service.title.toLowerCase().replace(/ /g, '-')}`}
+                    href={`/services/${service.title.toLowerCase().replace(/ /g, '-')}`}
                     className="text-gold hover:text-amber-500 transition-colors flex items-center"
                   >
                     Learn More
