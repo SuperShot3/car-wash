@@ -5,10 +5,16 @@ import Footer from "@/components/layout/Footer";
 import "./globals.css";
 import ChatBot from '@/components/ui/ChatBot';
 
-const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
+const inter = Inter({ 
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+  display: 'swap'
+});
+
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
-  variable: "--font-playfair"
+  variable: "--font-playfair",
+  display: 'swap'
 });
 
 export const metadata: Metadata = {

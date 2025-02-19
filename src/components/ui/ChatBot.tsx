@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon, PaperAirplaneIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 
 type Message = {
   role: 'user' | 'bot';
@@ -73,6 +74,7 @@ export default function ChatBot() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentStage, setCurrentStage] = useState<SuggestionCategory['stage']>('initial');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -129,17 +131,12 @@ export default function ChatBot() {
     setIsOpen(false);
   };
 
-  const handleSendMessage = async (text: string) => {
-    if (!text.trim()) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputMessage.trim() || isLoading) return;
 
-    // Проверяем, содержит ли сообщение намерение забронировать
-    if (text.toLowerCase().includes('book') || text.toLowerCase().includes('schedule')) {
-      handleBooking();
-      return;
-    }
-
-    const newMessage: Message = { role: 'user', content: text };
-    setMessages(prev => [...prev, newMessage]);
+    const userMessage = inputMessage.trim();
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setInputMessage('');
     setIsLoading(true);
 
@@ -148,43 +145,29 @@ export default function ChatBot() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: text,
-          history: messages,
-        }),
+          message: userMessage,
+          history: messages.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        })
       });
 
       const data = await response.json();
-      
-      if (response.ok) {
-        let botResponse = data.response;
-        
-        // Заменяем фразу на кликабельную ссылку
-        if (botResponse.includes('Click here to view our complete pricing table')) {
-          botResponse = botResponse.replace(
-            'Click here to view our complete pricing table',
-            '<span class="text-gold cursor-pointer hover:underline" data-action="pricing">Click here to view our complete pricing table</span>'
-          );
-        }
 
-        // В ответах бота добавим ссылку на бронирование
-        if (botResponse.includes('would you like to book') || botResponse.includes('make a booking')) {
-          botResponse = botResponse.replace(
-            /(book\s+now|make\s+a\s+booking)/gi,
-            '<span class="text-gold cursor-pointer hover:underline" data-action="booking">book now</span>'
-          );
-        }
-
-        setMessages(prev => [...prev, { 
-          role: 'bot', 
-          content: botResponse 
-        }]);
-      } else {
-        throw new Error(data.error);
+      if (data.redirect) {
+        router.push(data.redirect);
       }
+
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: data.response 
+      }]);
     } catch (error) {
-      setMessages(prev => [...prev, {
-        role: 'bot',
-        content: "I'm sorry, I'm having trouble processing your request. Please try again."
+      console.error('Chat error:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, I encountered an error. Please try again.' 
       }]);
     } finally {
       setIsLoading(false);
@@ -317,7 +300,7 @@ export default function ChatBot() {
                       ?.suggestions.map((msg) => (
                         <button
                           key={msg}
-                          onClick={() => handleSendMessage(msg)}
+                          onClick={() => setInputMessage(msg)}
                           className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full transition-colors"
                         >
                           {msg}
@@ -332,12 +315,12 @@ export default function ChatBot() {
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputMessage)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
                     placeholder="Type your message..."
                     className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent bg-gray-50"
                   />
                   <button
-                    onClick={() => handleSendMessage(inputMessage)}
+                    onClick={handleSubmit}
                     disabled={isLoading || !inputMessage.trim()}
                     className="bg-gradient-to-r from-gold to-amber-500 text-white p-2 rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
