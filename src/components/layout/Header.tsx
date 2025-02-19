@@ -39,43 +39,47 @@ export default function Header() {
   return (
     <header 
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled 
+        isScrolled && !isMenuOpen
           ? 'bg-transparent backdrop-blur-sm' 
           : 'bg-white/95 backdrop-blur-sm shadow-md'
       }`}
     >
       <div className="container-custom py-2 md:py-3">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-left max-w-[95%] mx-auto">
           <Link 
             href="/" 
-            className="relative w-32 md:w-40 h-10 md:h-12 pl-4 md:pl-0"
+            className="relative w-[20%] max-w-[105px] min-w-[100px] aspect-[2/1] -ml-[2%] md:-ml-[5%]"
           >
-            <Image
-              src="/car-wash/images/logo/logo.png"
-              alt="Car Spa Logo"
-              fill
-              className="object-contain object-center md:object-left"
-              priority
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src="/car-wash/images/logo/logo.png"
+                alt="Car Spa Logo"
+                fill
+                className="object-contain object-left"
+                priority
+              />
+            </div>
           </Link>
           
-          <div className="hidden md:flex items-center space-x-6">
-            {menuItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm text-zinc-700 hover:text-gold font-medium transition-colors relative group"
+          <div className="hidden md:flex items-center mr-[-2%]">
+            <div className="flex items-center space-x-10">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm text-zinc-700 hover:text-gold font-medium transition-colors relative group"
+                >
+                  {item.name}
+                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                </Link>
+              ))}
+              <button 
+                onClick={handleBookNow}
+                className="bg-gradient-to-r from-gold to-amber-500 text-white px-5 py-2 rounded-md hover:from-amber-500 hover:to-gold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm"
               >
-                {item.name}
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-              </Link>
-            ))}
-            <button 
-              onClick={handleBookNow}
-              className="bg-gradient-to-r from-gold to-amber-500 text-white px-5 py-2 rounded-md hover:from-amber-500 hover:to-gold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm"
-            >
-              Book Now
-            </button>
+                Book Now
+              </button>
+            </div>
           </div>
 
           <div className="md:hidden flex items-center">
@@ -111,9 +115,7 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className={`md:hidden ${
-          isScrolled ? 'bg-white/95' : 'bg-zinc-100/95'
-        } backdrop-blur-sm`}>
+        <div className="md:hidden bg-white/95 backdrop-blur-sm">
           <div className="px-2 pt-2 pb-2 space-y-1 sm:px-3">
             {menuItems.map((item) => (
               <Link

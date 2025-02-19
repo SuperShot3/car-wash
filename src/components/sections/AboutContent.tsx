@@ -29,7 +29,7 @@ export default function AboutContent() {
                 src="/car-wash/images/about/facility.png"
                 alt="About Our Car Wash"
                 width={800}
-                height={600}
+                height={700}
                 className="object-cover"
                 priority
               />
