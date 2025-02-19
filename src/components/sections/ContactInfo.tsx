@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { PhoneIcon, EnvelopeIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
 
+
 const ContactInfo = () => {
   return (
     <section className="py-20 bg-white">
