@@ -10,17 +10,17 @@ const services: { title: ServiceType; description: string; image: string }[] = [
   {
     title: 'Basic Wash',
     description: 'Complete exterior wash and basic interior cleaning',
-    image: '/car-wash/images/services/basic-wash.jpg',
+    image: '/car-wash/images/services/basic-wash.png',
   },
   {
     title: 'Deluxe Wash',
     description: 'Premium wash with wax protection and interior detailing',
-    image: '/car-wash/images/services/deluxe-wash.jpg',
+    image: '/car-wash/images/services/deluxe-wash.png',
   },
   {
     title: 'Premium Detail',
     description: 'Full detail service with ceramic coating and paint correction',
-    image: '/car-wash/images/services/premium-detail.jpg',
+    image: '/car-wash/images/services/premium-detail.png',
   },
 ];
 
@@ -29,6 +29,10 @@ export default function Services() {
 
   const handleBooking = (service: ServiceType) => {
     router.push(`/contact?service=${encodeURIComponent(service)}`);
+  };
+
+  const handleLearnMore = (service: string) => {
+    router.push(`/car-wash/services/${service}`);
   };
 
   return (
@@ -66,7 +70,7 @@ export default function Services() {
                 <p className="text-zinc-600 mb-4">{service.description}</p>
                 <div className="flex space-x-4">
                   <Link 
-                    href={`/services/${encodeURIComponent(service.title)}`}
+                    href={`/car-wash/services/${service.title}`}
                     className="text-gold hover:text-amber-500 transition-colors flex items-center"
                   >
                     Learn More
