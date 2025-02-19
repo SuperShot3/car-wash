@@ -24,12 +24,14 @@ export default function AboutContent() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
+            <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
               <Image
                 src="/car-wash/images/about/facility.png"
                 alt="About Our Car Wash"
-                fill
+                width={800}
+                height={600}
                 className="object-cover"
+                priority
               />
             </div>
           </motion.div>

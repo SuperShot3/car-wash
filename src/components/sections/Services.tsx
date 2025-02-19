@@ -28,7 +28,7 @@ export default function Services() {
   const router = useRouter();
 
   const handleBooking = (service: ServiceType) => {
-    router.push(`/contact?service=${encodeURIComponent(service)}`);
+    router.push(`/car-wash/contact?service=${encodeURIComponent(service)}`);
   };
 
   const handleLearnMore = (service: string) => {
@@ -70,7 +70,7 @@ export default function Services() {
                 <p className="text-zinc-600 mb-4">{service.description}</p>
                 <div className="flex space-x-4">
                   <Link 
-                    href={`/car-wash/services/${service.title}`}
+                    href={`/car-wash/services/${service.title.toLowerCase().replace(' ', '-')}`}
                     className="text-gold hover:text-amber-500 transition-colors flex items-center"
                   >
                     Learn More

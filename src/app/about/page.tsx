@@ -10,7 +10,7 @@ export default function AboutPage() {
       <MapSection />
       <ContactInfo />
       <Image
-        src="/car-wash/images/about-image.jpg"
+        src="/car-wash/images/facility.png"
         alt="About Us"
       />
     </div>
