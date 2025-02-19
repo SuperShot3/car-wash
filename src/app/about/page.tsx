@@ -1,6 +1,7 @@
 import AboutContent from '@/components/sections/AboutContent';
 import MapSection from '@/components/sections/MapSection';
 import ContactInfo from '@/components/sections/ContactInfo';
+import Image from 'next/image';
 
 export default function AboutPage() {
   return (
@@ -8,6 +9,10 @@ export default function AboutPage() {
       <AboutContent />
       <MapSection />
       <ContactInfo />
+      <Image
+        src="/car-wash/images/about-image.jpg"
+        alt="About Us"
+      />
     </div>
   );
 } 
