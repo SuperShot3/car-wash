@@ -6,14 +6,17 @@ import Link from 'next/link';
 export default function Header() {
   return (
     <header className="fixed w-full bg-transparent backdrop-blur-sm z-50 transition-all duration-300">
-      <div className="container-custom py-6">
+      <div className="container-custom py-4 md:py-6">
         <div className="flex justify-between items-center">
-          <Link href="/" className="relative w-48 h-16">
+          <Link 
+            href="/" 
+            className="relative w-36 md:w-48 h-12 md:h-16 ml-0"
+          >
             <Image
               src="/car-wash/images/logo/logo.png"
               alt="Car Spa Logo"
               fill
-              className="object-contain object-left"
+              className="object-contain object-center md:object-left"
               priority
             />
           </Link>
