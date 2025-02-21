@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XMarkIcon, PaperAirplaneIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, PaperAirplaneIcon, ChevronUpIcon, ChevronDownIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -15,60 +16,115 @@ type SuggestionCategory = {
   suggestions: string[];
 };
 
-const suggestionsByStage: SuggestionCategory[] = [
-  {
-    stage: 'initial',
-    suggestions: [
-      "Show me your services and prices",
-      "What's included in each service?",
-      "Book a service now",
-      "What are your working hours?",
-    ]
-  },
-  {
-    stage: 'services',
-    suggestions: [
-      "What's included in Basic Wash?",
-      "Tell me about Deluxe Wash",
-      "Premium Detail features?",
-      "Price for motorcycle detailing",
-    ]
-  },
-  {
-    stage: 'vehicle',
-    suggestions: [
-      "Prices for small car",
-      "Prices for SUV/Crossover",
-      "Prices for van/truck",
-      "Motorcycle services",
-    ]
-  },
-  {
-    stage: 'booking',
-    suggestions: [
-      "Book exterior wash",
-      "Book full service",
-      "Available time slots?",
-      "How long does it take?",
-    ]
-  },
-  {
-    stage: 'confirmation',
-    suggestions: [
-      "Confirm booking",
-      "Change appointment",
-      "Cancel booking",
-      "Get directions",
-    ]
-  },
-];
+const suggestionsByStage: Record<'en' | 'ru', SuggestionCategory[]> = {
+  en: [
+    {
+      stage: 'initial',
+      suggestions: [
+        "Show me your services and prices",
+        "What's included in each service?",
+        "Book a service now",
+        "What are your working hours?",
+      ]
+    },
+    {
+      stage: 'services',
+      suggestions: [
+        "What's included in Basic Wash?",
+        "Tell me about Deluxe Wash",
+        "Premium Detail features?",
+        "Price for motorcycle detailing",
+      ]
+    },
+    {
+      stage: 'vehicle',
+      suggestions: [
+        "Prices for small car",
+        "Prices for SUV/Crossover",
+        "Prices for van/truck",
+        "Motorcycle services",
+      ]
+    },
+    {
+      stage: 'booking',
+      suggestions: [
+        "Book exterior wash",
+        "Book full service",
+        "Available time slots?",
+        "How long does it take?",
+      ]
+    },
+    {
+      stage: 'confirmation',
+      suggestions: [
+        "Confirm booking",
+        "Change appointment",
+        "Cancel booking",
+        "Get directions",
+      ]
+    },
+  ],
+  ru: [
+    {
+      stage: 'initial',
+      suggestions: [
+        "Покажите ваши услуги и цены",
+        "Что включено в каждую услугу?",
+        "Записаться на сервис",
+        "Какой у вас график работы?",
+      ]
+    },
+    {
+      stage: 'services',
+      suggestions: [
+        "Что входит в базовую мойку?",
+        "Расскажите о премиум мойке",
+        "Особенности детейлинга?",
+        "Цена мойки мотоцикла",
+      ]
+    },
+    {
+      stage: 'vehicle',
+      suggestions: [
+        "Цены для легкового авто",
+        "Цены для внедорожника",
+        "Цены для микроавтобуса",
+        "Услуги для мотоциклов",
+      ]
+    },
+    {
+      stage: 'booking',
+      suggestions: [
+        "Записаться на мойку",
+        "Записаться на полный сервис",
+        "Доступное время?",
+        "Сколько времени занимает?",
+      ]
+    },
+    {
+      stage: 'confirmation',
+      suggestions: [
+        "Подтвердить запись",
+        "Изменить время",
+        "Отменить запись",
+        "Как проехать?",
+      ]
+    },
+  ]
+};
 
 export default function ChatBot() {
+  const { language, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hello! Welcome to Car Spa. How can I help you today?' }
+    { 
+      role: 'assistant', 
+      content: language === 'ru' 
+        ? 'Здравствуйте! Добро пожаловать в автосервис. Как я могу вам помочь?' 
+        : 'Hello! Welcome to Car Service. How can I help you today?' 
+    }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -136,63 +192,53 @@ export default function ChatBot() {
     setIsOpen(false);
   };
 
+  const detectLanguage = (text: string): 'en' | 'ru' => {
+    // Simple detection: if text contains Cyrillic characters, assume Russian
+    return /[а-яА-Я]/.test(text) ? 'ru' : 'en';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim() || isLoading) return;
 
     const userMessage = inputMessage.trim();
+    const detectedLang = detectLanguage(userMessage);
+    
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setInputMessage('');
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: userMessage
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.redirect) {
-        // Добавляем сообщение бота перед перенаправлением
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: data.response 
-        }]);
-        
-        // Задержка перед перенаправлением
-        setTimeout(async () => {
-          try {
-            // Сначала делаем перенаправление
-            await router.push(data.redirect);
-            
-            // После перенаправления ждем немного для загрузки страницы
-            setTimeout(() => {
-              const pricingSection = document.getElementById('pricing');
-              if (pricingSection) {
-                pricingSection.scrollIntoView({ behavior: 'smooth' });
-              }
-            }, 100);
-            
-            setIsOpen(false);
-          } catch (error) {
-            console.error('Navigation error:', error);
-          }
-        }, 2000);
+      // Simulate AI response based on detected language
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      let response = '';
+      if (detectedLang === 'ru') {
+        if (userMessage.toLowerCase().includes('цен')) {
+          response = 'Вы можете посмотреть наши цены в разделе "Цены". Хотите, я покажу вам?';
+        } else if (userMessage.toLowerCase().includes('запис')) {
+          response = 'Я могу помочь вам записаться на обслуживание. Хотите записаться прямо сейчас?';
+        } else {
+          response = 'Чем я могу помочь вам? Вы можете спросить о наших услугах, ценах или записаться на обслуживание.';
+        }
       } else {
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: data.response 
-        }]);
+        if (userMessage.toLowerCase().includes('price')) {
+          response = 'You can check our prices in the Pricing section. Would you like me to show you?';
+        } else if (userMessage.toLowerCase().includes('book')) {
+          response = 'I can help you book a service. Would you like to make a booking now?';
+        } else {
+          response = 'How can I assist you? You can ask about our services, prices, or book an appointment.';
+        }
       }
+
+      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Sorry, I encountered an error. Please try again.' 
+        content: language === 'ru'
+          ? 'Извините, произошла ошибка. Пожалуйста, попробуйте еще раз.'
+          : 'Sorry, I encountered an error. Please try again.'
       }]);
     } finally {
       setIsLoading(false);
@@ -213,32 +259,53 @@ export default function ChatBot() {
     return () => document.removeEventListener('click', handleActionClick);
   }, [setIsOpen]);
 
+  // Get current suggestions based on language and stage
+  const getCurrentSuggestions = () => {
+    return suggestionsByStage[language].find(cat => cat.stage === currentStage)?.suggestions || [];
+  };
+
+  // Add this to your JSX where you want to show suggestions
+  const renderSuggestions = () => {
+    if (!showSuggestions) return null;
+    
+    const suggestions = getCurrentSuggestions();
+    
+    return (
+      <div className="p-4 border-t">
+        <div className="flex flex-wrap gap-2">
+          {suggestions.map((suggestion, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setInputMessage(suggestion);
+                handleSubmit(new Event('submit') as any);
+              }}
+              className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors duration-300"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <AnimatePresence>
-        {/* Кнопка чата */}
-        <motion.div
-          key="chat-button"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          className="fixed bottom-4 right-4 z-50 md:block"
+      {/* Кнопка открытия чата */}
+      {!isOpen && (
+        <motion.button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-4 right-4 bg-gold text-white p-4 rounded-full shadow-lg hover:bg-amber-600 transition-colors duration-300"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="bg-gradient-to-r from-gold to-amber-500 hover:from-amber-500 hover:to-gold text-white p-4 rounded-full shadow-lg transition-all duration-300"
-          >
-            {isOpen ? (
-              <XMarkIcon className="w-6 h-6" />
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-            )}
-          </button>
-        </motion.div>
+          <ChatBubbleLeftIcon className="h-6 w-6" />
+        </motion.button>
+      )}
 
-        {/* Окно чата */}
+      {/* Окно чата */}
+      <AnimatePresence>
         {isOpen && (
           <motion.div
             key="chat-window"
@@ -247,13 +314,14 @@ export default function ChatBot() {
             exit={{ opacity: 0, y: 100 }}
             className="fixed bottom-4 right-4 w-96 bg-white rounded-lg shadow-2xl z-50 overflow-hidden"
           >
-            {/* Header - всегда видимый */}
+            {/* Заголовок */}
             <div className="p-4 bg-gradient-to-r from-gold to-amber-500 text-white rounded-t-lg flex justify-between items-center">
-              <h3 className="font-playfair text-lg">Car Spa Assistant</h3>
+              <h3 className="font-playfair text-lg">{t('chat.title')}</h3>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setIsMinimized(!isMinimized)}
                   className="p-1 hover:bg-white/20 rounded-full transition-colors"
+                  title={isMinimized ? t('chat.maximize') : t('chat.minimize')}
                 >
                   {isMinimized ? (
                     <ChevronUpIcon className="h-5 w-5" />
@@ -264,113 +332,71 @@ export default function ChatBot() {
                 <button 
                   onClick={() => setIsOpen(false)}
                   className="p-1 hover:bg-white/20 rounded-full transition-colors"
+                  title={t('chat.close')}
                 >
                   <XMarkIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
 
-            {/* Содержимое чата - сворачиваемая часть */}
-            <motion.div
-              animate={{ 
-                height: isMinimized ? 0 : 'auto',
-                opacity: isMinimized ? 0 : 1
-              }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              {/* Messages */}
-              <div className="h-[400px] overflow-y-auto p-4 space-y-4 bg-gray-50">
-                <div className="h-6" />
-                
-                {messages.map((message, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-[80%] p-3 rounded-2xl ${
-                        message.role === 'user'
-                          ? 'bg-gradient-to-r from-gold to-amber-500 text-white ml-4'
-                          : 'bg-white border border-gray-200 text-gray-800 mr-4'
-                      } shadow-md`}
-                      dangerouslySetInnerHTML={{ __html: message.content }}
-                    />
-                  </motion.div>
-                ))}
-                {isLoading && (
-                  <div className="flex justify-center p-4">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gold"></div>
-                  </div>
-                )}
-                {error && (
-                  <div className="text-red-500 text-sm text-center p-2">
-                    {error}
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Suggested Messages with Toggle */}
-              <div className="p-4 border-t border-gray-100 bg-white space-y-4">
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={() => setShowSuggestions(!showSuggestions)}
-                    className="text-sm text-zinc-600 hover:text-gold transition-colors flex items-center gap-2"
-                  >
-                    {showSuggestions ? (
-                      <>
-                        <ChevronUpIcon className="h-4 w-4" />
-                        Hide suggestions
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDownIcon className="h-4 w-4" />
-                        Show suggestions
-                      </>
+            {/* Содержимое чата */}
+            <AnimatePresence>
+              {!isMinimized && (
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: 'auto' }}
+                  exit={{ height: 0 }}
+                  className="overflow-hidden"
+                >
+                  {/* Сообщения */}
+                  <div className="h-96 overflow-y-auto p-4 space-y-4">
+                    {messages.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div className={`max-w-[80%] p-3 rounded-lg ${
+                          message.role === 'user' 
+                            ? 'bg-gold text-white' 
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {message.content}
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-gray-100 text-gray-800 p-3 rounded-lg">
+                          {t('chat.loading')}
+                        </div>
+                      </div>
                     )}
-                  </button>
-                </div>
-
-                {showSuggestions && (
-                  <div className="flex flex-wrap gap-2">
-                    {suggestionsByStage
-                      .find(s => s.stage === currentStage)
-                      ?.suggestions.map((msg) => (
-                        <button
-                          key={msg}
-                          onClick={() => setInputMessage(msg)}
-                          className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full transition-colors"
-                        >
-                          {msg}
-                        </button>
-                      ))}
                   </div>
-                )}
 
-                {/* Input */}
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
-                    placeholder="Type your message..."
-                    className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent bg-gray-50"
-                  />
-                  <button
-                    onClick={handleSubmit}
-                    disabled={isLoading || !inputMessage.trim()}
-                    className="bg-gradient-to-r from-gold to-amber-500 text-white p-2 rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <PaperAirplaneIcon className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+                  {renderSuggestions()}
+
+                  {/* Форма ввода */}
+                  <form onSubmit={handleSubmit} className="p-4 border-t">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={inputMessage}
+                        onChange={(e) => setInputMessage(e.target.value)}
+                        placeholder={t('chat.placeholder')}
+                        className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent"
+                      />
+                      <button
+                        type="submit"
+                        disabled={!inputMessage.trim() || isLoading}
+                        className="bg-gold text-white px-6 py-2 rounded-full hover:bg-amber-600 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {t('chat.send')}
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

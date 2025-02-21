@@ -3,8 +3,11 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <div className="relative h-screen w-full">
       {/* Background Image */}
@@ -17,7 +20,7 @@ export default function Hero() {
           className="object-cover"
           quality={100}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60" />
       </div>
 
       {/* Content */}
@@ -29,7 +32,7 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-6xl font-playfair text-white mb-6"
           >
-            Premium Car Care Service
+            {t('hero.title')}
           </motion.h1>
           
           <motion.p
@@ -38,21 +41,25 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/90 mb-8"
           >
-            Trust your vehicle to the professionals
+            {t('hero.subtitle')}
           </motion.p>
+
+          <p className="text-lg mb-8 text-white font-medium drop-shadow-lg">
+            {t('hero.description')}
+          </p>
 
           <div className="space-x-4">
             <Link
               href="/contact"
               className="bg-gradient-to-r from-gold to-amber-500 text-white px-8 py-3 rounded-md hover:from-amber-500 hover:to-gold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Book Now
+              {t('nav.bookNow')}
             </Link>
             <Link
               href="/services"
               className="bg-white text-gold px-8 py-3 rounded-md hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Our Services
+              {t('services.title')}
             </Link>
           </div>
         </div>

@@ -4,35 +4,36 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ServiceType } from '@/types/services';
-
-const services: { title: ServiceType; description: string; image: string }[] = [
-  {
-    title: 'Basic Wash',
-    description: 'Complete exterior wash and basic interior cleaning',
-    image: '/images/services/basic-wash.png',
-  },
-  {
-    title: 'Deluxe Wash',
-    description: 'Premium wash with wax protection and interior detailing',
-    image: '/images/services/deluxe-wash.png',
-  },
-  {
-    title: 'Premium Detail',
-    description: 'Full detail service with ceramic coating and paint correction',
-    image: '/images/services/premium-detail.png',
-  },
-];
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Services() {
+  const { t } = useLanguage();
   const router = useRouter();
 
-  const handleBooking = (service: ServiceType) => {
+  const services = [
+    {
+      title: t('services.basic.title'),
+      description: t('services.basic.description'),
+      image: '/images/services/basic-wash.png',
+    },
+    {
+      title: t('services.deluxe.title'),
+      description: t('services.deluxe.description'),
+      image: '/images/services/deluxe-wash.png',
+    },
+    {
+      title: t('services.premium.title'),
+      description: t('services.premium.description'),
+      image: '/images/services/premium-detail.png',
+    },
+  ];
+
+  const handleBooking = (service: string) => {
     router.push(`/contact?service=${encodeURIComponent(service)}`);
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section id="services" className="py-16 bg-white">
       <div className="container-custom">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
@@ -40,7 +41,7 @@ export default function Services() {
           viewport={{ once: true }}
           className="text-3xl md:text-4xl font-playfair text-center mb-12"
         >
-          Our Premium Services
+          {t('services.title')}
         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {services.map((service, index) => (

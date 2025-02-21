@@ -1,16 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useLanguage } from '@/context/LanguageContext';
+import { useEffect } from 'react';
 
-export default function MapComponent() {
-  const [isClient, setIsClient] = useState(false);
+const MapComponent = () => {
+  const { t } = useLanguage();
+  const position: [number, number] = [55.7558, 37.6173];
 
   useEffect(() => {
-    setIsClient(true);
-    // Исправляем проблему с иконками Leaflet
+    // Fix Leaflet icon issue
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -18,16 +19,6 @@ export default function MapComponent() {
       shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
     });
   }, []);
-
-  const position: [number, number] = [55.7558, 37.6173]; // Координаты центра Москвы
-
-  if (!isClient) {
-    return (
-      <div className="h-[400px] w-full rounded-lg overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
-        <p>Загрузка карты...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="h-[400px] w-full rounded-lg overflow-hidden shadow-lg">
@@ -44,12 +35,14 @@ export default function MapComponent() {
         <Marker position={position}>
           <Popup>
             <div className="text-center">
-              <h3 className="font-semibold">Наш автосервис</h3>
-              <p>Добро пожаловать!</p>
+              <h3 className="font-semibold">{t('map.title')}</h3>
+              <p>{t('map.welcome')}</p>
             </div>
           </Popup>
         </Marker>
       </MapContainer>
     </div>
   );
-} 
+};
+
+export default MapComponent; 

@@ -2,20 +2,22 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function AboutContent() {
+  const { t } = useLanguage();
+
   return (
-    <section className="py-20">
+    <section id="about" className="py-20 bg-white">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto text-center mb-16"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto text-center"
         >
-          <h1 className="text-4xl md:text-5xl font-playfair mb-6">About Car Spa</h1>
-          <p className="text-xl text-zinc-600">
-            Delivering excellence in automotive care since 2015
-          </p>
+          <h2 className="text-4xl font-playfair mb-8">{t('about.title')}</h2>
+          <p className="text-lg text-gray-600 mb-6">{t('about.description')}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-20">

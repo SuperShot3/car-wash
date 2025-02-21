@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Импорт Leaflet после tailwind */
 @import 'leaflet/dist/leaflet.css';
 
 :root {
@@ -11,7 +12,7 @@
 
 @layer base {
   body {
-    @apply text-[#36454F] antialiased;
+    @apply text-charcoal antialiased;
   }
 }
 
@@ -28,9 +29,13 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Добавьте специфичные стили для карты */
+/* Стили для карты */
 .leaflet-container {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+
+.leaflet-control-container .leaflet-control {
+  z-index: 2;
 } 

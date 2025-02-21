@@ -48,7 +48,7 @@ export default function Header() {
         <div className="flex justify-between items-left max-w-[95%] mx-auto">
           <Link 
             href="/" 
-            className="relative w-[20%] max-w-[105px] min-w-[100px] aspect-[2/1] -ml-[2%] md:-ml-[5%]"
+            className="relative w-[20%] max-w-[105px] min-w-[100px] aspect-[2/1] -ml-[1%] md:-ml-[3%]"
           >
             <div className="relative w-full h-full">
               <Image
@@ -61,7 +61,7 @@ export default function Header() {
             </div>
           </Link>
           
-          <div className="hidden md:flex items-center mr-[-2%]">
+          <div className="hidden md:flex items-center ml-[-10%]">
             <div className="flex items-center space-x-10">
               {menuItems.map((item) => (
                 <Link

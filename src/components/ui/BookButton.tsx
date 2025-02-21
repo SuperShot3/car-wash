@@ -1,29 +1,23 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ServiceType } from '@/types/services';
+import { useLanguage } from '@/context/LanguageContext';
 
-interface BookButtonProps {
-  service?: ServiceType;
-  className?: string;
-}
+export default function BookButton() {
+  const { t } = useLanguage();
 
-export default function BookButton({ service, className }: BookButtonProps) {
-  const router = useRouter();
-
-  const handleBooking = () => {
-    const url = service 
-      ? `/contact?service=${encodeURIComponent(service)}`
-      : '/contact';
-    router.push(url);
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <button
-      onClick={handleBooking}
-      className={className || "bg-gradient-to-r from-gold to-amber-500 text-white px-6 py-2.5 rounded-md hover:from-amber-500 hover:to-gold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"}
+      onClick={scrollToContact}
+      className="bg-gold hover:bg-amber-600 text-white px-4 py-2 rounded-md transition-colors duration-300"
     >
-      Book Now
+      {t('nav.bookNow')}
     </button>
   );
 } 
